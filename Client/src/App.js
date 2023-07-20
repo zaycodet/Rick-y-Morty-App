@@ -20,11 +20,14 @@ function App() {
   const [access, setAccess] = useState(false);
 
   const login = (userData) => {
-    if(userData.email === email && userData.password === password){
-      setAccess(true);
-      navigate('/home');
-    }
-  }
+    const { email, password } = userData;
+    const URL = 'http://localhost:3001/rickandmorty/login/';
+    axios(URL + `?email=${email}&password=${password}`).then(({ data }) => {
+       const { access } = data;
+       setAccess(access);
+       access && navigate('/home');
+    });
+ }
 
   const logout = () => {
     setAccess(false);
@@ -36,7 +39,7 @@ function App() {
  }, [access]);
 
   const onSearch = (id) => {
-    axios(`https://rickandmortyapi.com/api/character/${id}`)
+    axios(`http://localhost:3001/rickandmorty/character/${id}`)
       .then((response) => response.data)
       .then((data) => {
         if (data.name) {
